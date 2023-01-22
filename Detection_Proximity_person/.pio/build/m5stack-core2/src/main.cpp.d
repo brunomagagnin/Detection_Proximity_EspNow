@@ -1,6 +1,5 @@
 .pio/build/m5stack-core2/src/main.cpp.o: src/main.cpp \
- .pio/libdeps/m5stack-core2/M5Core2/src/M5Core2.h \
- C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
+ C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/arduino.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp_arduino_version.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos/FreeRTOSConfig.h \
@@ -121,6 +120,7 @@
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/HWCDC.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/Esp.h \
+ C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_partition.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_flash.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/spi_flash_types.h \
@@ -128,6 +128,7 @@
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
+ .pio/libdeps/m5stack-core2/M5Core2/src/M5Core2.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src/Wire.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
@@ -307,4 +308,5 @@
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/Server.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiUdp.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/Udp.h \
- C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h
+ C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h \
+ src/..\lib/ESP_Peer.h
