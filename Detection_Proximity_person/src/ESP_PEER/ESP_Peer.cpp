@@ -13,6 +13,8 @@ ESP_Peer::ESP_Peer(char *macAddress)
     this->index = 0;
     this->peerAlert = false;
     this->peerDanger = false;
+    this->acceptClose = false;
+    this->isCreateIcon = false;
 
     for (int i = 0; i < sizeof(this->macAddress); i++)
     {
@@ -54,6 +56,14 @@ bool ESP_Peer::getIsDanger()
     return this->peerDanger;
 }
 
+bool ESP_Peer::getAcceptClose(){
+    return this->acceptClose;
+}
+
+bool ESP_Peer::getIsCreateIcon(){
+    return this->isCreateIcon;
+}
+
 u_int32_t ESP_Peer::getAlertTime()
 {
     return this->alertTime;
@@ -63,6 +73,8 @@ u_int32_t ESP_Peer::getDangerTime()
 {
     return this->dangerTime;
 }
+
+
 
 /*----------------------------------------------------------------------------
 --------------------------------------SET METHODS-----------------------------
@@ -91,6 +103,13 @@ void ESP_Peer::setIsAlert(bool alert)
 void ESP_Peer::setIsDanger(bool danger)
 {
     this->peerDanger = danger;
+}
+void ESP_Peer::setAcceptClose(bool b){
+    this->acceptClose = b;
+}
+
+void ESP_Peer::setIsCreateIcon(bool c){
+    this->isCreateIcon = c;
 }
 
 void ESP_Peer::setAlertTime(u_int32_t time)

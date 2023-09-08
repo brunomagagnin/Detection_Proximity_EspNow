@@ -8,9 +8,11 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "c:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/include",
-                "c:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/src",
-                "c:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/M5Core2/src",
+                "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/include",
+                "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/src",
+                "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/lvgl",
+                "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/lvgl/src",
+                "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/M5Core2/src",
                 "C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
                 "C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
@@ -236,9 +238,11 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "c:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/include",
-                    "c:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/src",
-                    "c:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/M5Core2/src",
+                    "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/include",
+                    "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/src",
+                    "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/lvgl",
+                    "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/lvgl/src",
+                    "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/M5Core2/src",
                     "C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
                     "C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
@@ -463,7 +467,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60105",
+                "PLATFORMIO=60111",
                 "ARDUINO_M5STACK_Core2",
                 "BOARD_HAS_PSRAM",
                 "HAVE_CONFIG_H",
@@ -483,8 +487,8 @@
                 "ARDUINO_PARTITION_default",
                 ""
             ],
-            "cStandard": "c99",
-            "cppStandard": "c++11",
+            "cStandard": "gnu99",
+            "cppStandard": "gnu++11",
             "compilerPath": "C:/Users/User/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-gcc.exe",
             "compilerArgs": [
                 "-mlongcalls",

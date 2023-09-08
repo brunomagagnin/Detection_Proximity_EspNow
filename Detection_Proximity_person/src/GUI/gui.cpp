@@ -1,13 +1,29 @@
 #include "gui.h"
 
+LV_IMG_DECLARE(Logo);
+lv_obj_t *imgLogo;
+
 LV_IMG_DECLARE(Icone);
+lv_obj_t *imgTab1;
+lv_obj_t *imgTab2;
+
 lv_obj_t *tabview;
 lv_obj_t *tab1;
 lv_obj_t *tab2;
 
+bool callMachine = false;
+int currentTab = 0;
+
 namespace screen
 {
     static lv_obj_t *slider_label;
+
+    static void event_tabButton(lv_event_t *e)
+    {
+        lv_obj_t *btns = lv_event_get_current_target(e);
+
+        currentTab = lv_btnmatrix_get_selected_btn(btns);
+    }
 
     void tabview_screen(void)
     {
@@ -23,31 +39,42 @@ namespace screen
 
         lv_obj_t *label = lv_label_create(tab1);
         label = lv_label_create(tab2);
-        lv_label_set_text(label, "Second tab");
+        lv_label_set_text(label, " ");
+
+        lv_obj_add_event_cb(tab_btns, event_tabButton, LV_EVENT_CLICKED, NULL);
     }
 
-    void create_alert()
+    void create_alert(int index)
     {
-        lv_obj_t *imgTab1 = lv_img_create(tab1);
-        lv_img_set_src(imgTab1, &Icone);
-        lv_obj_align(imgTab1, LV_ALIGN_CENTER, 0, -15);
+        if (index == 0)
+        {
+            imgTab1 = lv_img_create(tab1);
+            lv_img_set_src(imgTab1, &Icone);
+            lv_obj_align(imgTab1, LV_ALIGN_CENTER, 0, -15);
+        }
 
-        lv_obj_t *imgTab2 = lv_img_create(tab2);
-        lv_img_set_src(imgTab2, &Icone);
-        lv_obj_align(imgTab2, LV_ALIGN_CENTER, 0, -15);
+        if (index == 1)
+        {
+            imgTab2 = lv_img_create(tab2);
+            lv_img_set_src(imgTab2, &Icone);
+            lv_obj_align(imgTab2, LV_ALIGN_CENTER, 0, -15);
+        }
     }
 
-    void delete_alert(lv_obj_t * e){
-           //lv_obj_del(e);
+    void delete_alert(int index)
+    {
+        if (index == 0)
+            lv_obj_del(imgTab1);
+        if (index == 1)
+            lv_obj_del(imgTab2);
     }
 
-    static void event_cb(lv_event_t *e)
+    static void event_button(lv_event_t *e)
     {
         lv_event_code_t code = lv_event_get_code(e);
-
         if (code == LV_EVENT_CLICKED)
         {
-         
+            callMachine = true;
         }
     }
 
@@ -73,7 +100,7 @@ namespace screen
         lv_style_set_text_color(&style_v, lv_color_white());
         lv_style_set_pad_all(&style_v, 10);
 
-        //pressed style
+        // pressed style
         static lv_style_t style_pr;
         lv_style_init(&style_pr);
 
@@ -104,7 +131,19 @@ namespace screen
         lv_label_set_text(label1, "REQUISITAR");
         lv_obj_center(label1);
         lv_obj_align(btn1, LV_ALIGN_CENTER, 0, 90);
-        lv_obj_add_event_cb(btn1, event_cb, LV_EVENT_CLICKED, NULL);
+        lv_obj_add_event_cb(btn1, event_button, LV_EVENT_CLICKED, NULL);
+    }
+
+    void create_company()
+    {
+        imgLogo = lv_img_create(lv_scr_act());
+        lv_img_set_src(imgLogo, &Logo);
+        lv_obj_align(imgLogo, LV_ALIGN_CENTER, 0, 0);
+    }
+
+    void delete_company()
+    {
+        lv_obj_del(imgLogo);
     }
 
     void lv_screen()
@@ -112,4 +151,20 @@ namespace screen
         tabview_screen();
         lv_btn();
     }
+
+    bool getCallMachine()
+    {
+        return callMachine;
+    }
+
+    void setCallMachine()
+    {
+        callMachine = false;
+    }
+
+    int lv_current_tab()
+    {
+        return currentTab;
+    }
+
 }

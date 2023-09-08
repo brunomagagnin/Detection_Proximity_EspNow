@@ -6,10 +6,11 @@
 #include "control.h"
 #include "ESP_PEER/ESP_Peer.h"
 
-
 namespace controller
 {
-    void alert(ESP_Peer *peers);
+    void alert(ESP_Peer *peers, bool accepted);
+    bool counterTime(ESP_Peer *peers);
+    bool iconAlert(ESP_Peer *peers, bool accepted);
 }
 
 #endif
