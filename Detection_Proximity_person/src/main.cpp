@@ -14,27 +14,18 @@
 static uint8_t taskCoreZero = 0;
 static uint8_t taskCoreOne = 1;
 
-// static const uint8_t call = 204;
-//  D4:D4:DA:5C:AA:8C dispositivo novo
-//  24:D7:EB:39:01:A0 dispositivo antigo
-
-static uint8_t macSlaves[NUMBER_OF_PEERS][6] = {{0xD4, 0xD4, 0xDA, 0x5C, 0xAA, 0x8C}, {0x25, 0xD7, 0xEB, 0x39, 0x01, 0xA0}};
-static char addressPeers[NUMBER_OF_PEERS][18] = {"d4:d4:da:5c:aa:8c", "0c:f8:15:ic:23:7c"};
-static String namePeer[NUMBER_OF_PEERS] = {"Maquina 1  ", "Maquina 2  "};
-static bool markerOfPeerFound[NUMBER_OF_PEERS] = {0, 0};
-static ESP_Peer *peers;
-static int rssi;
-static char macStr[18];
+// B4:E6:2D:96:28:11 ESP32 PURO
+//  0C:B8:15:EC:22:6C esp32 puro maior
+//  Mac Address of peers  "0c:b8:15:ec:22:6c" 0c:f8:15:ic:23:7c
+uint8_t peerMacAddress[6] = {0x0C, 0xB8, 0x15, 0xEC, 0x22, 0x6C};
+char addressPeers[NUMBER_OF_PEERS][18] = {"0c:b8:15:ec:22:6c", "0c:f8:15:ic:23:7c"};
+String namePeer[NUMBER_OF_PEERS] = {"Maquina 1  ", "Maquina 2  "};
+bool markerOfPeerFound[NUMBER_OF_PEERS] = {0, 0};
+ESP_Peer *peers;
+int rssi;
+char macStr[18];
 
 esp_now_peer_info_t peer;
-
-bool callMachineActive = false;
-bool imageCreate = false;
-
-static const uint8_t approachRequest = 201;
-static const uint8_t acceptedApproximation = 202;
-static const uint8_t notAuthorized = 203;
-static const uint8_t broadCast = 255;
 
 void lv_handler()
 {
@@ -84,7 +75,6 @@ bool compareAddress(ESP_Peer *obj, char *mac, int index)
 ------------------------------ ESPNOW - CALLBACKS AND FUNCTIONS ----------------------------------------
 =========================================================================================================
 =========================================================================================================*/
-
 // Struct to calc packags and rssi
 typedef struct
 {
@@ -141,37 +131,13 @@ void addPeer(uint8_t *peerMacAddress)
 void send(const uint8_t *value, uint8_t *peerMacAddress)
 {
     esp_err_t result = esp_now_send(peerMacAddress, value, sizeof(value));
-
-    if (DEBUG)
+    if (result == ESP_OK)
     {
-        if (result == ESP_OK)
-        {
-            Serial.println("Success");
-        }
-        else if (result == ESP_ERR_ESPNOW_NOT_INIT)
-        {
-            Serial.println("ESPNOW not Init.");
-        }
-        else if (result == ESP_ERR_ESPNOW_ARG)
-        {
-            Serial.println("Invalid Argument");
-        }
-        else if (result == ESP_ERR_ESPNOW_INTERNAL)
-        {
-            Serial.println("Internal Error");
-        }
-        else if (result == ESP_ERR_ESPNOW_NO_MEM)
-        {
-            Serial.println("ESP_ERR_ESPNOW_NO_MEM");
-        }
-        else if (result == ESP_ERR_ESPNOW_NOT_FOUND)
-        {
-            Serial.println("Peer not found.");
-        }
-        else
-        {
-            Serial.println("Not sure what happened");
-        }
+        Serial.println("Success");
+    }
+    else
+    {
+        Serial.println("Error");
     }
 }
 
@@ -182,34 +148,28 @@ void onDataRecv(const uint8_t *mac_addr, const uint8_t *value, int len)
     snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
              mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 
+    Serial.println("Peer detectado:");
+    Serial.println(macStr);
+    Serial.println(rssi);
+    
     for (int i = 0; i < NUMBER_OF_PEERS; i++)
     {
         if (compareAddress(peers, macStr, i))
         {
-            if (*value == acceptedApproximation)
-            {
-                peers[i].setAcceptClose(true);
-                return;
-            }
-            else
-            {
-                peers[i].setAcceptClose(false);
-            }
-
-            if (!rssi > TARGET_ALERT)
+            if (rssi > TARGET_ALERT)
             {
                 peers[i].setIsAlert(true);
                 peers[i].setAlertTime(millis());
             }
+            /*
+            if (rssi > TARGET_DANGER)
+            {
+                peers[i].setIsDanger(true);
+                peers[i].setDangerTime(millis());
+            }
+            */
         }
     }
-}
-
-void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
-{
-    char macStr[18];
-    snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-             mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 }
 
 /*============================================================================================================
@@ -221,34 +181,10 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 void taskScreen(void *pvParameters)
 {
     setupLvgl::lv_begin();
-    screen::create_company();
-    lv_handler();
-    delay(6000);
-    screen::delete_company();
     screen::lv_screen();
-    lv_handler();
 
     while (true)
     {
-        for (int i = 0; i < 2; i++)
-        {
-            if (!peers[i].getIsCreateIcon() && peers[i].getAcceptClose())
-            {
-                screen::create_alert(i);
-                peers[i].setIsCreateIcon(true);
-                callMachineActive = true;
-            }
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            if (!peers[i].getAcceptClose() && peers[i].getIsCreateIcon())
-            {
-                screen::delete_alert(i);
-                peers[i].setIsCreateIcon(false);
-                callMachineActive = false;
-            }
-        }
         lv_handler();
         vTaskDelay(30);
     }
@@ -259,49 +195,26 @@ void espnowTask(void *pvParameters)
     WiFi.channel(CHANNEL);
     WiFi.mode(WIFI_STA);
 
+    InitESPNow();
+    addPeer(peerMacAddress);
+    esp_now_register_recv_cb(onDataRecv);
+    // esp_now_register_send_cb(onDataSent);
     esp_wifi_set_promiscuous(true);
     esp_wifi_set_promiscuous_rx_cb(&promiscuous_rx_cb);
 
-    Serial.print("MacAddress deste Dispositivo: ");
-    Serial.println(WiFi.macAddress());
-
-    delay(6000);
-
-    InitESPNow();
-
-    int slavesCount = sizeof(macSlaves) / 6 / sizeof(uint8_t);
-    // for each slave
-    for (int i = 0; i < slavesCount; i++)
-    {
-        esp_now_peer_info_t slave;
-        slave.channel = CHANNEL;
-        slave.encrypt = 0;
-        memcpy(slave.peer_addr, macSlaves[i], sizeof(macSlaves[i]));
-        esp_now_add_peer(&slave);
-        esp_now_register_recv_cb(onDataRecv);
-    }
-    esp_now_register_send_cb(OnDataSent);
-
     while (true)
     {
-        if (screen::getCallMachine())
-        {
-            send(&approachRequest, macSlaves[screen::lv_current_tab()]);
-            screen::setCallMachine();
-        }
-        controller::alert(peers, callMachineActive);
-        vTaskDelay(250);
+        controller::alert(peers);
+        vTaskDelay(500);
     }
 }
-// static const uint8_t approachRequest = 201;
-// static const uint8_t acceptedApproximation = 202;
-// static const uint8_t notAuthorized = 203;
 
 /* ==========================================================================================================
 =============================================================================================================
 ---------------------------------------------------SETUP-----------------------------------------------------
 =============================================================================================================
 ============================================================================================================*/
+
 void setup()
 {
     M5.begin();
@@ -320,7 +233,7 @@ void setup()
         NULL,
         2,
         NULL,
-        taskCoreOne);
+        1);
     delay(50);
 
     xTaskCreatePinnedToCore(
@@ -330,7 +243,7 @@ void setup()
         NULL,
         2,
         NULL,
-        taskCoreZero);
+        0);
     delay(50);
 }
 

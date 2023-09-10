@@ -1,27 +1,12 @@
 #include "control.h"
 
-/*++++++++++++++++++++++++  ALERT  +++++++++++++++++++++++
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 bool controlAlert = false;
 uint32_t lastAlert = 0;
-bool acceptedApproximation = false;
-
-/*++++++++++++++++++++++++  ALERT  +++++++++++++++++++++++
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-bool iconCreate[NUMBER_OF_PEERS] = {false, false};
-
-/*++++++++++++++++++++++++  TIMER  +++++++++++++++++++++++
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-bool initTimer = false;
-uint32_t setTime = 0;
-const uint32_t setPoint = 20000;
 
 namespace controller
 {
-    void alert(ESP_Peer *peers, bool accepted) //
+    void alert(ESP_Peer *peers) //
     {
-        acceptedApproximation = accepted;
-
         // Tempo mínimo para novo alerta
         if (millis() - lastAlert > REFRESH)
         {
@@ -37,7 +22,7 @@ namespace controller
                 }
             }
             // ALERTA
-            if (!acceptedApproximation && controlAlert)
+            if (controlAlert)
             {
                 lastAlert = millis();
                 M5.Axp.SetLDOEnable(3, true);
@@ -54,43 +39,10 @@ namespace controller
             controlAlert = false;
             for (int i = 0; i < NUMBER_OF_PEERS; i++)
             {
-                peers[i].setIsAlert(false);
+               peers[i].setIsAlert(false);
             }
         }
+         
     }
-/*
-    bool iconAlert(ESP_Peer *peers, bool accepted)
-    {
-        if (!iconCreate)
-        {
-            for (int index = 0; index < NUMBER_OF_PEERS; index++)
-            {
-                if (peers->getAcceptClose() && !iconCreate[index])
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-*/
-    bool counterTime(ESP_Peer *peers)
-    {
-        if (!initTimer)
-        {
-            initTimer = true;
-            setTime = millis();
-        }
-
-        if (millis() - setTime > setPoint)
-        {
-            setTime = millis();
-            return false;
-        }
-        for (int i = 0; i < 2; i++)
-        {
-            peers->setAcceptClose(false);
-        }
-        return true;
-    }
+   
 }
