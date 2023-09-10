@@ -168,7 +168,7 @@ void tabview_screen()
     tabview = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 50);
     lv_obj_set_style_bg_color(tabview, lv_color_black(), 0);
 
-    tab1 = lv_tabview_add_tab(tabview, "CENTRAL DE ALERTAS");
+    tab1 = lv_tabview_add_tab(tabview, "ALERTAS");
 
     lv_obj_t *tab_btns = lv_tabview_get_tab_btns(tabview);
     lv_obj_set_style_bg_color(tab_btns, lv_palette_darken(LV_PALETTE_GREY, 3), 0);
@@ -488,9 +488,6 @@ void alert(ESP_Peer *peers, bool accepted) //
 /*++++++++++++++++++++++++  TIMER  +++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-
-const uint32_t setPoint = 7000;
-
 bool counterTime()
 {
     static bool initTimer = false;
@@ -502,7 +499,7 @@ bool counterTime()
         setTime = millis();
     }
 
-    if (millis() - setTime < setPoint)
+    if (millis() - setTime < TIME_TO_STAY_CLOSE)
     {
         return false;
     }
@@ -529,13 +526,12 @@ void taskScreen(void *pvParameters)
 
     while (true)
     {
-        // Cria caixa de mensagem
         if (!msgBoxCreate && msgboxIsON)
         {
             lv_msgbox(indexResponse);
             msgBoxCreate = true;
         }
-        // Tempo de caixa de mensagem aberta
+    
         if (msgboxIsON && millis() - msgTime > CLOSE_MSGBOX)
         {
             if (mbox != NULL)

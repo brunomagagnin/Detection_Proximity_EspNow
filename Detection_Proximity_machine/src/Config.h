@@ -20,10 +20,14 @@ Number of Peers that will be registered
 //-----------------------------------------
 
 
+/*+++++++++++++++++++++++++++++++++++++++++++++
+                  CONFIGS
++++++++++++++++++++++++++++++++++++++++++++++++*/
 #define TARGET_ALERT -75
 #define TARGET_DANGER -65
 #define REFRESH 5000 
 #define VIBRATION_TIME 1000
+#define TIME_TO_STAY_CLOSE 180000
 
 #define CLOSE_MSGBOX 12000
 

@@ -40,8 +40,6 @@ int ESP_Peer::getRssi()
     return rssi;
 }
 
-
-
 bool ESP_Peer::getIsAlert()
 {
     return this->peerAlert;
