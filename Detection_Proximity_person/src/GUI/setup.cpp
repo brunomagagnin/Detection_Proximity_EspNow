@@ -1,4 +1,4 @@
-#include "setup.h"
+#include "GUI/setup.h"
 
 namespace setupLvgl
 {

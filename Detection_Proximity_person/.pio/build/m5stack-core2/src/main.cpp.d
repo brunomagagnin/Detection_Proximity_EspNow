@@ -532,5 +532,7 @@
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiUdp.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/Udp.h \
  C:/Users/User/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h \
- src/Config.h src/ESP_PEER/ESP_Peer.h src/Control/control.h src/Config.h \
- src/Control/control.h src/GUI/setup.h src/GUI/gui.h
+ src/Mac_Address.h src/Config.h include/CompareAddress.h \
+ include/Peer/Peer.h include/ESP/ESP_Peer.h include/Peer/Peer.h \
+ src/Config.h include/ESP/ESP_Core.h include/Control.h include/control.h \
+ include/GUI/setup.h include/GUI/gui.h include/Peer/AddPeer.h

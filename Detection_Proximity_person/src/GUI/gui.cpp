@@ -1,4 +1,4 @@
-#include "gui.h"
+#include "GUI/gui.h"
 
 LV_IMG_DECLARE(Logo);
 lv_obj_t *imgLogo;
@@ -36,15 +36,6 @@ namespace screen
         lv_obj_t *tab_btns = lv_tabview_get_tab_btns(tabview);
         lv_obj_set_style_bg_color(tab_btns, lv_palette_darken(LV_PALETTE_GREY, 3), 0);
         lv_obj_set_style_text_color(tab_btns, lv_palette_lighten(LV_PALETTE_BLUE, 2), 0);
-
-        /*
-        lv_obj_t *label = lv_label_create(tab1);
-        lv_obj_t *label2 = lv_label_create(tab2);
-         lv_label_set_text(label, " ");
-        lv_label_set_text(label2, " ");
-        label = lv_label_create(tab1);
-        label2 = lv_label_create(tab2);
-        */
 
         lv_obj_add_event_cb(tab_btns, event_tabButton, LV_EVENT_CLICKED, NULL);
     }

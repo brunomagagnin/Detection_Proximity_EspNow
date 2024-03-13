@@ -8,6 +8,7 @@
 #include "Config.h"
 #include "ESP_PEER/ESP_Peer.h"
 
+//{0x0C, 0xB8, 0x15, 0xEC, 0x22, 0x6C}, {0x24, 0xD7, 0xEB, 0x39, 0x01, 0xA0}
 uint8_t macSlaves[NUMBER_OF_PEERS][6] = {{0x0C, 0xB8, 0x15, 0xEC, 0x22, 0x6C}, {0x24, 0xD7, 0xEB, 0x39, 0x01, 0xA0}};
 uint8_t macBroadcast[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 char addressPeers[NUMBER_OF_PEERS][18] = {"0c:b8:15:ec:22:6c", "24:d7:eb:39:01:a0"};
@@ -374,7 +375,7 @@ void onDataRecv(const uint8_t *mac_addr, const uint8_t *value, int len)
     // Copy address of sender
     snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
              mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
-
+    Serial.println(macStr);
     for (int i = 0; i < NUMBER_OF_PEERS; i++)
     {
         if (!msgboxIsON && *value == approachRequest && compareAddress(peers, macStr, i))
@@ -384,6 +385,7 @@ void onDataRecv(const uint8_t *mac_addr, const uint8_t *value, int len)
         }
     }
 }
+
 void broadcastSend()
 {
     esp_err_t result = esp_now_send(macBroadcast, (uint8_t *)&broadCast, sizeof(broadCast));
@@ -561,9 +563,11 @@ void espnowTask(void *pvParameters)
 {
     WiFi.channel(CHANNEL);
     WiFi.mode(WIFI_STA);
+
     esp_wifi_set_promiscuous(true);
     esp_wifi_set_promiscuous_rx_cb(&promiscuous_rx_cb);
-
+    esp_wifi_set_channel(CHANNEL, WIFI_SECOND_CHAN_NONE);
+    
     Serial.print("MacAddress deste Dispositivo: ");
     Serial.println(WiFi.macAddress());
 
@@ -581,7 +585,11 @@ void espnowTask(void *pvParameters)
         slave.channel = CHANNEL;
         slave.encrypt = 0;
         memcpy(slave.peer_addr, macSlaves[i], sizeof(macSlaves[i]));
-        esp_now_add_peer(&slave);
+        if (esp_now_add_peer(&slave) != ESP_OK)
+        {
+            Serial.print("ESP_NOW: Houve um erro ao adicionar um slave: ");
+            Serial.println(addressPeers[i]);
+        }
         esp_now_register_recv_cb(onDataRecv);
     }
     Serial.println("Adicionando Broadcast");
@@ -589,7 +597,10 @@ void espnowTask(void *pvParameters)
     bCast.channel = CHANNEL;
     bCast.encrypt = 0;
     memcpy(bCast.peer_addr, macBroadcast, 6);
-    esp_now_add_peer(&bCast);
+    if(esp_now_add_peer(&bCast) != ESP_OK){
+        Serial.println("ESP_NOW: Houve um erro ao adicionar Broadcast");
+    }
+    Serial.println("Broadcast adicionado.");
 
     while (true)
     {
