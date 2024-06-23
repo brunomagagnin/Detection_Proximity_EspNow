@@ -38,3 +38,7 @@ Caso o pedestre deseje se aproximar da máquina, deverá pressionar o botão "Re
 * Em locais onde há incidencia de inúmeros roteadores wifi, pode haver perda de sinal. Para isso é necessário fazer um estudo e adequar o sistema para utilizar um canal que não entre em conflito com os demais sinais existentes. 
 * Config.h arquivo de configurações gerais como: canal wifi a ser utilizado, força do sinal, tempos etc.
 * Mac_Address.h arquivo de configuraçao dos enderenço de todos os hardwares utilizados.
+
+
+## ✒️ Autor
+* **BRUNO MAGAGNIN PEREIRA**
