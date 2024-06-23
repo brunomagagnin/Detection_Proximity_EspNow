@@ -55,5 +55,6 @@
         "cstdbool": "cpp",
         "typeinfo": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "cmake.sourceDirectory": "C:/Users/User/Documents/PlatformIO/Projects/ESPNOW_DETECTION_PROXIMITY/Detection_Proximity_person/.pio/libdeps/m5stack-core2/lvgl"
 }

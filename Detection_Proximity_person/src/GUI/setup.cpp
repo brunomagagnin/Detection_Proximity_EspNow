@@ -1,14 +1,26 @@
-#include "GUI/setup.h"
+#include "GUI/Setup.h"
+
+
+/**********************
+         OBJECT
+ **********************/
+TFT_eSPI tft = TFT_eSPI();
+
+
+
+/**********************
+ *  STATIC VARIABLES
+ **********************/
+static const uint16_t screenWidth = 320;
+static const uint16_t screenHeight = 240;
+
+static lv_disp_draw_buf_t disp_buf;
+static lv_color_t buf[screenWidth * screenHeight / 10];
+
+
 
 namespace setupLvgl
 {
-  static const uint16_t screenWidth = 320;
-  static const uint16_t screenHeight = 240;
-
-  TFT_eSPI tft = TFT_eSPI();
-  static lv_disp_draw_buf_t disp_buf;
-  static lv_color_t buf[screenWidth * screenHeight / 10];
-
   // Display flushing
   void my_disp_flush(lv_disp_drv_t *disp,
                      const lv_area_t *area, lv_color_t *color_p)

@@ -1,4 +1,4 @@
-#include "GUI/gui.h"
+#include "GUI/GUI.h"
 
 LV_IMG_DECLARE(Logo);
 lv_obj_t *imgLogo;
@@ -16,6 +16,11 @@ int currentTab = 0;
 
 namespace screen
 {
+
+/**************************************************************************
+-------------------------- METHODS CREATE OBJECTS -------------------------
+***************************************************************************/
+
     static lv_obj_t *slider_label;
 
     static void event_tabButton(lv_event_t *e)
@@ -148,17 +153,20 @@ namespace screen
         lv_btn();
     }
 
+/**************************************************************************
+--------------------------- GET AND SET METHODS ---------------------------
+***************************************************************************/
     bool getCallMachine()
     {
         return callMachine;
     }
 
-    void setCallMachine()
+    void turnOffCallMachine()
     {
         callMachine = false;
     }
 
-    int lv_current_tab()
+    int getCurrentTab()
     {
         return currentTab;
     }

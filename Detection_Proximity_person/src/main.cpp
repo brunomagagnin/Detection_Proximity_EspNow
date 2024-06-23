@@ -1,44 +1,51 @@
-#include <Arduino.h>
-#include <M5Core2.h>
-#include <lvgl.h>
+/*********************
+ *      INCLUDES
+ *********************/
 #include <esp_wifi.h>
 #include <esp_now.h>
 #include <WiFi.h>
-#include <Mac_Address.h>
 
-#include "CompareAddress.h"
 #include "Config.h"
-#include "ESP/ESP_Peer.h"
-#include "ESP/ESP_Core.h"
-#include "Control.h"
-#include "GUI/setup.h"
-#include "GUI/gui.h"
-#include "Peer/AddPeer.h"
+#include <Mac_Address.h>
+#include "HELPERS/CompareAddress.h"
+#include "HELPERS/Control.h"
 
+#include "Peer/AddPeer.h"
+#include "ESP/ESP_Core.h"
+
+#include <lvgl.h>
+#include "GUI/Setup.h"
+#include "GUI/GUI.h"
+
+/**********************
+ *  STATIC VARIABLES
+ **********************/
 static uint8_t taskCoreZero = 0;
 static uint8_t taskCoreOne = 1;
 
+/**********************
+ *   OBJECT ARRAY
+ **********************/
 #if EXTERN_SENDERS
 ESP_Core *core[NUMBER_OF_MACHINES];
 ESP_Peer *peers[NUMBER_OF_MACHINES][NUMBER_OF_EXTERN_PEERS];
 
 #else
-ESP_Peer *peers[NUMBER_OF_MACHINES];
+ESP_Core *core[NUMBER_OF_MACHINES];
 #endif
 
+/**********************
+ *   GLOBAL VARIABLES
+ **********************/
 int rssi;
 char macStr[18];
 
-bool callMachineActive = false;
-bool imageCreate = false;
-
-/*==================================================================================================
------------------------------------------SENDING STATUS---------------------------------------------
-====================================================================================================*/
-static const uint8_t approachRequest = 201;
-static const uint8_t acceptedApproximation = 202;
-static const uint8_t notAuthorized = 203;
-static const uint8_t broadCast = 255;
+/**********************
+     SENDING STATUS
+ **********************/
+const uint8_t approachRequest = 201;
+const uint8_t acceptedApproximation = 202;
+const uint8_t notAuthorized = 203;
 
 /*==================================================================================================
 ----------------------------------------- HANDLER LVGL ---------------------------------------------
@@ -55,11 +62,11 @@ void lv_handler()
     }
 }
 
-/*=======================================================================================================
-=========================================================================================================
------------------------------- ESPNOW - CALLBACKS AND FUNCTIONS ----------------------------------------
-=========================================================================================================
-=========================================================================================================*/
+/*====================================================================================================
+======================================================================================================
+------------------------------ ESPNOW - CALLBACKS AND FUNCTIONS --------------------------------------
+======================================================================================================
+======================================================================================================*/
 
 // Struct to calc packags and rssi
 typedef struct
@@ -136,14 +143,13 @@ void send(const uint8_t *value, uint8_t *peerMacAddress)
         }
         else
         {
-            Serial.println("Not sure what happened");
+            Serial.println("There is no exception.");
         }
     }
 }
 
 void onDataRecv(const uint8_t *mac_addr, const uint8_t *value, int len)
 {
-    // Copy address of sender
     snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
              mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 
@@ -154,13 +160,14 @@ void onDataRecv(const uint8_t *mac_addr, const uint8_t *value, int len)
         {
             if (*value == acceptedApproximation)
             {
-                core[a]->setAcceptClose(true);
-                return;
+                core[a]->setAcceptApproach(true);
+                break;
             }
-        }
-        else
-        {
-            core[a]->setAcceptClose(false);
+            if (*value == notAuthorized)
+            {
+                core[a]->setAcceptApproach(false);
+                break;
+            }
         }
 
         for (int b = 0; b < NUMBER_OF_EXTERN_PEERS; b++)
@@ -179,16 +186,16 @@ void onDataRecv(const uint8_t *mac_addr, const uint8_t *value, int len)
 #else
     for (int a = 0; a < NUMBER_OF_MACHINES; a++)
     {
-        if (compare::compareAddressESP(core[a], macStr))
+        if (compare::compareAddressPeer(core[a], macStr))
         {
             if (*value == acceptedApproximation)
             {
-                core[a]->setIsClose(true);
-                // return;
+                core[a]->setAcceptApproach(true);
+                break;
             }
-            else
+            if (*value == notAuthorized)
             {
-                core[a]->setIsClose(false);
+                core[a]->setAcceptApproach(false);
             }
 
             if (rssi > TARGET_ALERT)
@@ -229,21 +236,19 @@ void taskScreen(void *pvParameters)
     {
         for (int i = 0; i < 2; i++)
         {
-            if (!core[i]->getIsCreateIcon() && core[i]->getAcceptClose())
+            if (!core[i]->getIsCreateIcon() && core[i]->getAcceptApproach())
             {
                 screen::create_alert(i);
                 core[i]->setIsCreateIcon(true);
-                callMachineActive = true;
             }
         }
 
         for (int i = 0; i < 2; i++)
         {
-            if (!core[i]->getAcceptClose() && core[i]->getIsCreateIcon())
+            if (!core[i]->getAcceptApproach() && core[i]->getIsCreateIcon())
             {
                 screen::delete_alert(i);
                 core[i]->setIsCreateIcon(false);
-                callMachineActive = false;
             }
         }
         lv_handler();
@@ -256,21 +261,19 @@ void taskScreen(void *pvParameters)
     {
         for (int i = 0; i < 2; i++)
         {
-            if (!core[i]->getIsCreateIcon() && core[i]->getIsClose())
+            if (!core[i]->getIsCreateIcon() && core[i]->getAcceptApproach())
             {
                 screen::create_alert(i);
                 core[i]->setIsCreateIcon(true);
-                callMachineActive = true;
             }
         }
 
         for (int i = 0; i < 2; i++)
         {
-            if (!core[i]->getIsClose() && core[i]->getIsCreateIcon())
+            if (!core[i]->getAcceptApproach() && core[i]->getIsCreateIcon())
             {
                 screen::delete_alert(i);
                 core[i]->setIsCreateIcon(false);
-                callMachineActive = false;
             }
         }
         lv_handler();
@@ -278,6 +281,7 @@ void taskScreen(void *pvParameters)
     }
 }
 #endif
+
 void espnowTask(void *pvParameters)
 {
     WiFi.channel(CHANNEL);
@@ -294,7 +298,12 @@ void espnowTask(void *pvParameters)
 
     InitESPNow();
 
-    AddPeer::addSlave(macSenders);
+#if EXTERN_SENDERS
+    AddPeer::addPeerSlave(macSenders);
+    AddPeer::addMachineSlave(macMachine);
+#endif
+
+    AddPeer::addMachineSlave(macMachine);
 
     esp_now_register_recv_cb(onDataRecv);
     esp_now_register_send_cb(OnDataSent);
@@ -303,16 +312,15 @@ void espnowTask(void *pvParameters)
     {
         if (screen::getCallMachine())
         {
-            send(&approachRequest, macMachine[screen::lv_current_tab()]);
-            screen::setCallMachine();
+            send(&approachRequest, macMachine[screen::getCurrentTab()]);
+            screen::turnOffCallMachine();
         }
-        
-        #if EXTERN_SENDERS
-        controller::peerAlert(peers, core);
-        #endif
 
-        controller::alert(core, callMachineActive);
-        vTaskDelay(250);
+#if EXTERN_SENDERS
+        controller::setCoreAlert(peers, core);
+#endif
+        controller::alertSoundVibration(core);
+        vTaskDelay(300);
     }
 }
 
@@ -369,5 +377,5 @@ void setup()
 
 void loop()
 {
-    delay(10000);
+    delay(100000);
 }

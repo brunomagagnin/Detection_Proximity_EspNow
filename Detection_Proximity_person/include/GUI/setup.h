@@ -1,7 +1,7 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#include <Arduino.h>
+
 #include <M5Core2.h>
 #include <lvgl.h>
 

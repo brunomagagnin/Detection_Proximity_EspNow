@@ -13,7 +13,8 @@
 
 namespace AddPeer{
 
-void addSlave(uint8_t macSlaves[NUMBER_OF_MACHINES][NUMBER_OF_EXTERN_PEERS][6]);
+void addPeerSlave(uint8_t macSlaves[NUMBER_OF_MACHINES][NUMBER_OF_EXTERN_PEERS][6]);
+void addMachineSlave(uint8_t macSlaves[NUMBER_OF_MACHINES][6]);
 
 }
 

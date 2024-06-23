@@ -1,8 +1,6 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include <Arduino.h>
-#include <M5Core2.h>
 #include <lvgl.h>
 namespace screen
 {
@@ -12,12 +10,13 @@ namespace screen
     void create_alert(int index);
     void delete_alert(int index);
 
-    bool getCallMachine();
-    void setCallMachine();
-
-    int lv_current_tab();
     void create_company();
     void delete_company();
+
+    bool getCallMachine();
+    void turnOffCallMachine();
+    int getCurrentTab();
+    
 }
 
 #endif

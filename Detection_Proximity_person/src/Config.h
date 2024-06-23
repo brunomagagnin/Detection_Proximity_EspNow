@@ -1,17 +1,24 @@
 #ifndef CONFIG_H 
 #define CONFIG_H
 
+/*+++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++
+   This file is to config this code
+
++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++*/
+
 
 /*+++++++++++++++++++++++++++++++++++++++++++++
     IF YOU WANT DEBUG FOR CODE WITH SERIAL
 +++++++++++++++++++++++++++++++++++++++++++++++*/
-#define DEBUG true
+#define DEBUG false
 //---------------------------------------------
 
 /*+++++++++++++++++++++++++++++++++++++++++++++
       IF YOU WANT TO USE EXTERN SENDERS
 +++++++++++++++++++++++++++++++++++++++++++++++*/
-#define EXTERN_SENDERS true
+#define EXTERN_SENDERS false
 // true YES   false NO
 
 /*+++++++++++++++++++++++++++++++++++++++++
@@ -24,10 +31,10 @@ Number of Peers that will be registered
 // PARAMETERS 
 #define CHANNEL 13 //wifi channel
 
-#define TARGET_ALERT -62 //sinal strength
-#define TARGET_DANGER -65 //sinal streagth
+#define TARGET_ALERT -62 //sinal strength to trigge the alert
 
 #define REFRESH 5000 
 #define VIBRATION_TIME 1000
+#define TIME_TO_STAY_CLOSE 20000 //not used
 
 #endif

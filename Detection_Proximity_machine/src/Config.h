@@ -1,33 +1,41 @@
 #ifndef CONFIG_H 
 #define CONFIG_H
 
-/*==================================================================================================
--------------------------------------------- PARAMETERS---------------------------------------------
-====================================================================================================*/
+/*+++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++
+   This file is to config this code
 
-#define CHANNEL 13
++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++*/
+
 
 /*+++++++++++++++++++++++++++++++++++++++++++++
-IF YOU WANT DEBUG FOR CODE WITH SERIAL
+    IF YOU WANT DEBUG FOR CODE WITH SERIAL
 +++++++++++++++++++++++++++++++++++++++++++++++*/
 #define DEBUG false
 //---------------------------------------------
 
+/*+++++++++++++++++++++++++++++++++++++++++++++
+      IF YOU WANT TO USE EXTERN SENDERS
++++++++++++++++++++++++++++++++++++++++++++++++*/
+#define EXTERN_SENDERS false
+// true YES   false NO
+
 /*+++++++++++++++++++++++++++++++++++++++++
 Number of Peers that will be registered 
  ++++++++++++++++++++++++++++++++++++++++*/
-#define NUMBER_OF_PEERS 2
+#define NUMBER_OF_PERSON 2
+#define NUMBER_OF_EXTERN_PEERS 2
 //-----------------------------------------
 
+// PARAMETERS 
+#define CHANNEL 13 //wifi channel
 
-/*+++++++++++++++++++++++++++++++++++++++++++++
-                  CONFIGS
-+++++++++++++++++++++++++++++++++++++++++++++++*/
-#define TARGET_ALERT -75
-#define TARGET_DANGER -65
+#define TARGET_ALERT -62 //sinal strength to trigge the alert
+
 #define REFRESH 5000 
 #define VIBRATION_TIME 1000
-#define TIME_TO_STAY_CLOSE 180000
+#define TIME_TO_STAY_CLOSE 20000
 
 #define CLOSE_MSGBOX 12000
 
